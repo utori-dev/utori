@@ -1,8 +1,9 @@
 {
-  "name": "@utori-dev/template-simple-typescript-library",
+  "name": "utori",
   "version": "0.1.0",
-  "description": "Created with @utori-dev/template-simple-typescript-library",
-  "main": "src/index.ts",
+  "description": "Simple CLI tool",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
     "build": "rimraf build/ && tsc",
@@ -10,11 +11,11 @@
     "test": "jest",
     "watch": "rimraf build/ && tsc -w",
     "pre-release": "rimraf dist/ && npm run build && node scripts/pre-release.js",
-    "release": "npm run pre-release && npm publish dist"
+    "release": "npm run pre-release && cd dist && npm publish"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/utori-dev/template-simple-npm-library.git"
+    "url": "git+https://github.com/utori-dev/utori.git"
   },
   "keywords": [
     "template",
@@ -24,11 +25,19 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/utori-dev/template-simple-typescript-library/issues"
+    "url": "https://github.com/utori-dev/utori/issues"
   },
-  "homepage": "https://github.com/utori-dev/template-simple-typescript-library#readme",
+  "homepage": "https://github.com/utori-dev/utori#readme",
+  "dependencies": {
+    "yargs": "^17.3.1"
+  },
+  "bin": {
+    "utori": "./bin/utori"
+  },
   "devDependencies": {
     "@types/jest": "^27.4.0",
+    "@types/node": "^17.0.21",
+    "@types/yargs": "^17.0.9",
     "jest": "^27.5.0",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",

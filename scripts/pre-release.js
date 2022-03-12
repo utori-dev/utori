@@ -24,6 +24,13 @@ const includedRootFiles = ['README.md', 'LICENSE'];
 const src = path.join(root, 'build');
 
 /**
+ * Directory containing bin files that will be copied to the `dist` directory.
+ *
+ * @type {string}
+ */
+const bin = path.join(root, 'bin');
+
+/**
  * Directory that will contain the assets that will be published.
  *
  * @type {string}
@@ -92,6 +99,7 @@ function writeDistributionPackageJson(options = {}) {
       'bugs',
       'license',
       'author',
+      'bin',
       'dependencies',
     ],
   } = options;
@@ -121,6 +129,36 @@ function writeDistributionPackageJson(options = {}) {
 }
 
 /**
+ * Write the distribution `bin` files for the package that will be published.
+ *
+ * @param {object} options Options for writing the bin files.
+ * @param {string} options.source Source directory for the bin files. Defaults to `bin`.
+ * @param {string} options.destination Destination directory for the bin files. Defaults to `dist`.
+ * @param {string} options.encoding Bin file encoding. Defaults to `'utf-8'`.
+ */
+function writeDistributionBin(options = {}) {
+  const { source = bin, destination = dist, encoding = 'utf-8' } = options;
+
+  const destinationBin = path.join(destination, 'bin');
+
+  fs.mkdirSync(destinationBin, { recursive: true });
+
+  // const utoriCommand = path.join(destinationBin, 'utori');
+  // const utoriContents = ['#!/usr/bin/env node', 'require("../index.js")'].join('\n');
+  // fs.writeFileSync(utoriCommand, utoriContents, { encoding });
+
+  fs.readdirSync(source, { encoding }).forEach((entry) => {
+    const originalPath = path.join(source, entry);
+    const originalContents = fs.readFileSync(originalPath, { encoding });
+
+    // Process contents and write new file.
+    const distContents = originalContents.split('../build/').join('../');
+    const distPath = path.join(destinationBin, entry);
+    fs.writeFileSync(distPath, distContents, { encoding });
+  });
+}
+
+/**
  * Create the package that will be published.
  */
 function createDistributionPackage() {
@@ -131,6 +169,7 @@ function createDistributionPackage() {
   });
 
   writeDistributionPackageJson();
+  writeDistributionBin();
 }
 
 createDistributionPackage();
